@@ -140,12 +140,10 @@ chrome.commands.onCommand.addListener(async (command) => {
 
 
 function saveHighlight(selectedText, tab) {
-  var id = Date.now() + "-" + Math.floor(Math.random() * 10000)
   const highlight = {
     url: tab.url,
     text: selectedText,
-    time: Date.now(),
-    hash: id
+    time: Date.now()
   };
 
   chrome.storage.local.get({ highlights: [] }, (data) => {
