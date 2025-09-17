@@ -41,7 +41,11 @@ body {
     font-size: 1em;
 }
 
-
+.highlightOptions {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
 
 #list {
     margin-bottom: 10px;

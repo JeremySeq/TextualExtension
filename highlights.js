@@ -1,4 +1,6 @@
 function renderHighlights(highlights) {
+    highlights.sort((a, b) => b.time - a.time);
+    
     const list = document.getElementById("list");
     list.innerHTML = "";
 
@@ -17,16 +19,27 @@ function renderHighlights(highlights) {
             <div class="text">${h.text}</div>
             <a class="url" href="${h.url}" target="_blank">${h.url}</a>
             <small>${new Date(h.time).toLocaleString()}</small>
-            <button data-index="${i}">Delete</button>
+            <div class="highlightOptions">
+                <button data-index="${i*2}">Copy</button>
+                <button data-index="${i*2+1}">Delete</button>
+            </div>
         `;
         list.appendChild(div);
     });
 
     document.querySelectorAll("button[data-index]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            highlights.splice(btn.dataset.index, 1);
-            chrome.storage.local.set({ highlights }, () => renderHighlights(highlights));
-        });
+        if (btn.dataset.index % 2 == 1) {
+            btn.addEventListener("click", () => {
+                highlights.splice((btn.dataset.index-1)/2, 1);
+                chrome.storage.local.set({ highlights }, () => renderHighlights(highlights));
+            });
+        } else {
+            btn.addEventListener("click", () => {
+                navigator.clipboard.writeText(highlights[btn.dataset.index/2].text);
+                btn.textContent = "Copied!";
+                setTimeout(() => btn.textContent = "Copy", 2000);
+            });
+        }
     });
 }
 
