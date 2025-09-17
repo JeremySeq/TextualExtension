@@ -86,3 +86,16 @@ body {
         transform: rotateZ(22deg) scale(1.1);
     }
 }
+
+.search {
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    outline: none;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    line-height: 1.5;
+}

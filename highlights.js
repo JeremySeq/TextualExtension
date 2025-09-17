@@ -1,5 +1,10 @@
+const searchInput = document.getElementById("search");
+
 function renderHighlights(highlights) {
+    const query = searchInput.value.toLowerCase();
     highlights.sort((a, b) => b.time - a.time);
+    const filtered = highlights.filter(h => h.text.toLowerCase().includes(query) || h.url.toLowerCase().includes(query));
+    
     
     const list = document.getElementById("list");
     list.innerHTML = "";
@@ -12,7 +17,14 @@ function renderHighlights(highlights) {
         return;
     }
 
-    highlights.forEach((h, i) => {
+    if (filtered.length === 0) {
+        list.innerHTML = `<p class='emptyText'>
+            No results.<br>
+            </p>`;
+        return;
+    }
+
+    filtered.forEach((h, i) => {
         const div = document.createElement("div");
         div.className = "highlight";
         div.innerHTML = `
@@ -30,12 +42,18 @@ function renderHighlights(highlights) {
     document.querySelectorAll("button[data-index]").forEach(btn => {
         if (btn.dataset.index % 2 == 1) {
             btn.addEventListener("click", () => {
-                highlights.splice((btn.dataset.index-1)/2, 1);
-                chrome.storage.local.set({ highlights }, () => renderHighlights(highlights));
+                const target = filtered[(btn.dataset.index-1)/2];
+
+                const realIndex = highlights.findIndex(h => h.time === target.time && h.text === target.text);
+
+                if (realIndex > -1) {
+                    highlights.splice(realIndex, 1);
+                    chrome.storage.local.set({ highlights }, () => renderHighlights(highlights));
+                }
             });
         } else {
             btn.addEventListener("click", () => {
-                navigator.clipboard.writeText(highlights[btn.dataset.index/2].text);
+                navigator.clipboard.writeText(filtered[btn.dataset.index/2].text);
                 btn.textContent = "Copied!";
                 setTimeout(() => btn.textContent = "Copy", 2000);
             });
@@ -45,6 +63,11 @@ function renderHighlights(highlights) {
 
 chrome.storage.local.get({ highlights: [] }, (data) => {
     renderHighlights(data.highlights);
+});
+
+// re-render when search input changes
+searchInput.addEventListener("input", () => {
+    chrome.storage.local.get({ highlights: [] }, (data) => renderHighlights(data.highlights));
 });
 
 document.getElementById("export").addEventListener("click", () => {

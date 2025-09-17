@@ -140,40 +140,42 @@ chrome.commands.onCommand.addListener(async (command) => {
 
 
 function saveHighlight(selectedText, tab) {
-    const highlight = {
-      url: tab.url,
-      text: selectedText,
-      time: Date.now()
-    };
+  var id = Date.now() + "-" + Math.floor(Math.random() * 10000)
+  const highlight = {
+    url: tab.url,
+    text: selectedText,
+    time: Date.now(),
+    hash: id
+  };
 
-    chrome.storage.local.get({ highlights: [] }, (data) => {
-      const highlights = data.highlights;
-      highlights.push(highlight);
-      chrome.storage.local.set({ highlights });
-    });
+  chrome.storage.local.get({ highlights: [] }, (data) => {
+    const highlights = data.highlights;
+    highlights.push(highlight);
+    chrome.storage.local.set({ highlights });
+  });
 
-    // notification
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: (msg) => {
-        const toast = document.createElement("div");
-        toast.textContent = msg;
-        toast.style.position = "fixed";
-        toast.style.top = "-50px";
-        toast.style.left = "50%";
-        toast.style.transform = "translateX(-50%)";
-        toast.style.background = "#3498db";
-        toast.style.color = "#fff";
-        toast.style.padding = "8px 12px";
-        toast.style.borderRadius = "5px";
-        toast.style.fontSize = "14px";
-        toast.style.zIndex = "999999";
-        toast.style.transition = "top 0.25s ease-in-out";
-        document.body.appendChild(toast);
-        setTimeout(() => {toast.style.top = "20px";}, 2);
-        setTimeout(() => {toast.style.top = "-50px";}, 2000);
-        setTimeout(() => toast.remove(), 3000);
-      },
-      args: ["Highlight saved!"]
-    });
+  // notification
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: (msg) => {
+      const toast = document.createElement("div");
+      toast.textContent = msg;
+      toast.style.position = "fixed";
+      toast.style.top = "-50px";
+      toast.style.left = "50%";
+      toast.style.transform = "translateX(-50%)";
+      toast.style.background = "#3498db";
+      toast.style.color = "#fff";
+      toast.style.padding = "8px 12px";
+      toast.style.borderRadius = "5px";
+      toast.style.fontSize = "14px";
+      toast.style.zIndex = "999999";
+      toast.style.transition = "top 0.25s ease-in-out";
+      document.body.appendChild(toast);
+      setTimeout(() => {toast.style.top = "20px";}, 2);
+      setTimeout(() => {toast.style.top = "-50px";}, 2000);
+      setTimeout(() => toast.remove(), 3000);
+    },
+    args: ["Highlight saved!"]
+  });
 }
