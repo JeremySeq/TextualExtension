@@ -31,7 +31,7 @@ function renderHighlights(highlights) {
         div.draggable = true;
         div.dataset.index = i;
         div.innerHTML = `
-            <div class="text">${h.text}</div>
+            <div class="text">${h.text.replace(/\n/g, "<br>")}</div>
             <a class="url" href="${h.url}" target="_blank">${h.url}</a>
             <small>${new Date(h.time).toLocaleString()}</small>
             <div class="highlightOptions">
@@ -101,14 +101,12 @@ searchInput.addEventListener("input", () => {
 
 document.getElementById("export").addEventListener("click", () => {
     chrome.storage.local.get({ highlights: [] }, (data) => {
-        const content = data.highlights.map(h =>
-            `${h.text}\n${h.url}\n${new Date(h.time).toLocaleString()}\n\n`
-        ).join("");
-        const blob = new Blob([content], { type: "text/plain" });
+        const content = JSON.stringify(data.highlights, null, 2);
+        const blob = new Blob([content], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "highlights.txt";
+        a.download = "highlights.json";
         a.click();
     });
 });
