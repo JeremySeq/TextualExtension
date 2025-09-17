@@ -148,7 +148,7 @@ function saveHighlight(selectedText, tab) {
 
   chrome.storage.local.get({ highlights: [] }, (data) => {
     const highlights = data.highlights;
-    highlights.push(highlight);
+    highlights.unshift(highlight);
     chrome.storage.local.set({ highlights });
   });
 

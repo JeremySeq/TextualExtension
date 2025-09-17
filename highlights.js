@@ -2,7 +2,6 @@ const searchInput = document.getElementById("search");
 
 function renderHighlights(highlights) {
     const query = searchInput.value.toLowerCase();
-    highlights.sort((a, b) => b.time - a.time);
     const filtered = highlights.filter(h => h.text.toLowerCase().includes(query) || h.url.toLowerCase().includes(query));
     
     
@@ -24,9 +23,13 @@ function renderHighlights(highlights) {
         return;
     }
 
+    let draggedIndex = null;
+
     filtered.forEach((h, i) => {
         const div = document.createElement("div");
         div.className = "highlight";
+        div.draggable = true;
+        div.dataset.index = i;
         div.innerHTML = `
             <div class="text">${h.text}</div>
             <a class="url" href="${h.url}" target="_blank">${h.url}</a>
@@ -36,6 +39,32 @@ function renderHighlights(highlights) {
                 <button data-index="${i*2+1}">Delete</button>
             </div>
         `;
+
+        // drag and drop
+        div.addEventListener("dragstart", () => {
+            draggedIndex = i;
+        });
+
+        div.addEventListener("dragend", () => {
+            draggedIndex = null;
+        });
+
+        div.addEventListener("dragover", (e) => {
+            e.preventDefault();
+        });
+
+        div.addEventListener("drop", () => {
+            if (draggedIndex === null || draggedIndex === i) return;
+
+            const movedItem = highlights.find(hh => hh.time === filtered[draggedIndex].time && hh.text === filtered[draggedIndex].text);
+            const fromIndex = highlights.findIndex(hh => hh.time === movedItem.time && hh.text === movedItem.text);
+            const toIndex = highlights.findIndex(hh => hh.time === filtered[i].time && hh.text === filtered[i].text);
+            const temp = highlights[fromIndex];
+            highlights[fromIndex] = highlights[toIndex];
+            highlights[toIndex] = temp;
+            chrome.storage.local.set({ highlights }, () => renderHighlights(highlights));
+        });
+
         list.appendChild(div);
     });
 
