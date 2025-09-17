@@ -1,0 +1,84 @@
+body {
+    margin: 10px;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.highlight {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+    gap: 10px;
+}
+
+.highlight button {
+    align-self: flex-start;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.text {
+    font-size: 1.3em;
+    line-height: 1.5;
+    letter-spacing: .5px;
+}
+
+.url {
+    font-size: 1.1em;
+    color: blue;
+    align-self: flex-start;
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.url:hover {
+    color: var(--secondary);
+}
+
+.highlight small {
+    font-size: 1em;
+}
+
+
+
+#list {
+    margin-bottom: 10px;
+}
+
+.emptyText {
+    font-size: 1.5em;
+    line-height: 2;
+}
+
+.emptyText strong {
+    color: var(--secondary);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+.memeText {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.6em;
+    color: #ffea00; /* minecraft yellow */
+    position: absolute;
+    top: 55px;      /* push down from top */
+    right: 45px;    /* push in from right */
+    transform: rotateZ(20deg); /* angled like mc */
+    text-shadow:
+        2px 2px 0 #000000,
+       -2px 2px 0 #000000,
+        2px -2px 0 #000000,
+       -2px -2px 0 #000000;
+
+    animation: bob 2s infinite ease-in-out;
+}
+
+@keyframes bob {
+    0%, 100% {
+        transform: rotateZ(20deg) scale(1);
+    }
+    50% {
+        transform: rotateZ(22deg) scale(1.1);
+    }
+}

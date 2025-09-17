@@ -1,0 +1,5 @@
+body {
+    width: 200px !important;
+    background-color: var(--bg);
+    color: var(--text);
+}

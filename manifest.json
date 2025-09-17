@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Textual",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["contextMenus", "scripting", "activeTab", "storage", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "save-highlight": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+H"
+      },
+      "description": "Save highlighted text with link"
+    }
+  }
+}
